@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/fyysikkokilta/fuusio:latest
+    image: ghcr.io/fyysikkokilta/fuusio80-website:latest
     restart: always
     extra_hosts:
       - 'host.docker.internal:host-gateway'
@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     ports:
-      - '127.0.0.1:8002:3000'
+      - '127.0.0.1:8003:3000'
     logging:
       driver: 'json-file'
       options:
