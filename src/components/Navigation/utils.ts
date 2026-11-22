@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 
 import { usePathname } from '@/i18n/navigation'
 import type { MainNavigation } from '@/payload-types'
+import { pageHref } from '@/utils/homePath'
 
 export function useIsActive() {
   const pathname = usePathname()
@@ -24,7 +25,7 @@ export function useGetPath() {
     ) => {
       if (item.type === 'page') {
         if (typeof item.page === 'number') return '#'
-        return item.page?.path ? `/${item.page.path}` : '#'
+        return item.page?.path ? pageHref(item.page.path) : '#'
       }
       if (item.type === 'external') {
         return item.url || '#'

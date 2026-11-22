@@ -4,6 +4,7 @@ import type { CollectionAfterChangeHook, CollectionSlug, TypeWithID } from 'payl
 
 import { routing } from '@/i18n/routing'
 import { Page } from '@/payload-types'
+import { HOME_PATH } from '@/utils/homePath'
 
 // To revalidate only a specific page, the exact path needs to be provided.
 // The path shouldn't contain the route groups or any dynamic segments.
@@ -58,6 +59,11 @@ export const revalidateCollection = <T extends TypeWithID>(
             return pathValues.map((path) => `/${locale}/${path}`)
           })
           .flat()
+      }
+
+      // The home page is shown at the site root as well
+      if (paths.some((path) => path.endsWith(`/${HOME_PATH}`))) {
+        paths.push(...routing.locales.map((locale) => `/${locale}`))
       }
 
       payload.logger.info(`[Page changed] Revalidating page at paths: ${paths.join(', ')}`)

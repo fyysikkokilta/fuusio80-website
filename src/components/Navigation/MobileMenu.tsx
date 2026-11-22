@@ -23,7 +23,7 @@ export function MobileMenu({ navigation }: { navigation: MainNavigation }) {
 
   return (
     <Drawer.Root open={open} onOpenChange={setOpen} swipeDirection="right">
-      <nav className="bg-fuusio-night text-fk-white fixed top-0 right-0 left-0 z-50 flex h-12 items-center px-2 font-bold lg:hidden">
+      <nav className="bg-fuusio-night text-fk-white flex h-12 w-full items-center px-2 font-bold lg:hidden">
         <NavbarBrand
           LinkElement={Link}
           logo={navigation.logo}

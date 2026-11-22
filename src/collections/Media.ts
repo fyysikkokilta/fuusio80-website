@@ -55,6 +55,13 @@ export const Media: CollectionConfig = {
   upload: {
     staticDir: 'public/media',
     mimeTypes: ['image/*'],
+    // The file route sends no cache headers by itself, so browsers would download shared images
+    // such as page backgrounds again on every page. Replacing a file keeps its URL, so the
+    // cache is kept short: a replaced image shows up for everyone within a day.
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800')
+      return headers
+    },
     formatOptions: {
       format: 'webp'
     },

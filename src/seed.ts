@@ -4,6 +4,8 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
+import { HOME_PATH } from '@/utils/homePath'
+
 type Node = Record<string, unknown>
 
 const text = (value: string): Node => ({
@@ -127,10 +129,8 @@ if (existing.totalDocs > 0) {
   process.exit(1)
 }
 
-const created = []
+const created: { id: number; fi: string; en: string }[] = []
 let navigationRowIds: (string | undefined)[] = []
-// Stable ids for the front page section cards, shared by both locales
-const sectionCardRowIds = ['juhlavuosi-card', 'fuusioviikko-card']
 const sectionCardTexts = [
   { fi: 'Koko vuoden juhlatapahtumat', en: 'Celebrations throughout the year' },
   { fi: 'Juhlaviikon ohjelma päivä päivältä', en: 'The programme of the week, day by day' }
@@ -153,36 +153,42 @@ for (const { fi, en } of pages) {
   created.push({ id: page.id, fi: fi.title, en: en.title })
 }
 
+// The front page is a normal page with the path "home", shown at the site root
+const homeContent = (locale: 'fi' | 'en') =>
+  richText(
+    block({
+      blockType: 'section-cards',
+      cards: created.slice(0, 2).map((page, index) => ({
+        title: page[locale],
+        description: sectionCardTexts[index][locale],
+        page: page.id
+      }))
+    }),
+    heading(locale === 'fi' ? 'Kalenteri' : 'Calendar'),
+    eventsBlock(['Juhlavuositapahtumat', 'Fuusioviikko', 'Fuusio 80'], 'calendar')
+  )
+const home = await payload.create({
+  collection: 'pages',
+  locale: 'fi',
+  data: {
+    title: 'Fuusio 80',
+    path: HOME_PATH,
+    content: homeContent('fi'),
+    fullWidth: true,
+    _status: 'published'
+  },
+  context
+})
+await payload.update({
+  collection: 'pages',
+  id: home.id,
+  locale: 'en',
+  data: { title: 'Fuusio 80', content: homeContent('en'), _status: 'published' },
+  context
+})
+
 for (const locale of ['fi', 'en'] as const) {
   const fi = locale === 'fi'
-
-  await payload.updateGlobal({
-    slug: 'landing-page',
-    locale,
-    data: {
-      title: 'Fuusio 80',
-      subtitle: fi
-        ? 'Fyysikkokillan 80. vuosijuhla 13.3.2027'
-        : 'The 80th annual ball of the Guild of Physics, 13 March 2027',
-      heroLinks: [{ label: 'Fuusio', url: '/fuusio' }],
-      content: richText(
-        block({
-          blockType: 'section-cards',
-          cards: created.slice(0, 2).map((page, index) => ({
-            // On the English pass reuse the row ids so the Finnish texts are kept
-            id: sectionCardRowIds[index],
-            title: page[locale],
-            description: sectionCardTexts[index][locale],
-            page: page.id
-          }))
-        }),
-        heading(fi ? 'Kalenteri' : 'Calendar'),
-        eventsBlock(['Juhlavuositapahtumat', 'Fuusioviikko', 'Fuusio 80'], 'calendar')
-      ),
-      _status: 'published'
-    },
-    context
-  })
 
   const navigation = await payload.updateGlobal({
     slug: 'main-navigation',

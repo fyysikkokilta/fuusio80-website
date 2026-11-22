@@ -2,7 +2,8 @@ const messages = {
   mainNavigation: {
     menu: 'Main navigation menu',
     openMenu: 'Open menu',
-    closeMenu: 'Close menu'
+    closeMenu: 'Close menu',
+    showMenu: 'Show main navigation'
   },
   tableOfContents: {
     toggle: 'Toggle table of contents'
@@ -39,6 +40,10 @@ const messages = {
     signupOpens: 'Registration opens {date}',
     signupClosed: 'Registration has ended',
     fetchFailed: 'Loading the events failed. See the events at'
+  },
+  rotatablePlane: {
+    label: 'Rotatable image',
+    hint: 'Drag sideways to turn the image over. Click, press Enter, or use the left and right arrow keys to turn it.'
   },
   pdfViewer: {
     openInNewTab: 'Open in new tab',

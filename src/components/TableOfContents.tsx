@@ -195,7 +195,7 @@ export const TableOfContents = ({ show, richText }: TableOfContentsProps) => {
     <>
       <nav
         ref={mobileNavRef}
-        className="border-fk-yellow/50 bg-fuusio-night/90 fixed top-12 left-0 z-10 w-full overflow-y-auto border-b backdrop-blur-sm lg:hidden"
+        className="border-fk-yellow/50 bg-fuusio-night/90 fixed top-0 left-0 z-10 w-full overflow-y-auto border-b backdrop-blur-sm lg:hidden"
       >
         {activeHeading && (
           <div className="flex items-center justify-between">
@@ -245,7 +245,7 @@ export const TableOfContents = ({ show, richText }: TableOfContentsProps) => {
       <nav
         className={`scrollbar ${
           headings.length > 0 ? 'border-fk-yellow/50' : 'border-transparent'
-        } sticky top-20 h-fit max-h-[calc(100dvh-5rem)] w-[20%] overflow-y-auto rounded border-2 max-lg:hidden`}
+        } sticky top-4 h-fit max-h-[calc(100dvh-2rem)] w-[20%] overflow-y-auto rounded border-2 max-lg:hidden`}
       >
         <ul className="ml-0 p-2">
           {headings.map((heading) => (

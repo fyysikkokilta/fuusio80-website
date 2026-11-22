@@ -46,6 +46,6 @@ export const Footer: GlobalConfig = {
     }
   ],
   hooks: {
-    afterChange: [revalidateGlobal('footer')]
+    afterChange: [revalidateGlobal()]
   }
 }

@@ -4,6 +4,7 @@ import { getPayload } from 'payload'
 
 import { env } from '@/env'
 import { routing } from '@/i18n/routing'
+import { HOME_PATH } from '@/utils/homePath'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,14 +29,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     limit: 0
   })
 
-  const landingPage = await payload.findGlobal({
-    slug: 'landing-page',
-    select: {
-      updatedAt: true
-    },
-    depth: 0,
-    locale: 'all'
-  })
+  // The home page is served at the site root, not under its own path
+  const pageUrl = (locale: string, localizedPath: string) =>
+    localizedPath === HOME_PATH
+      ? `${env.NEXT_PUBLIC_SERVER_URL}/${locale}`
+      : `${env.NEXT_PUBLIC_SERVER_URL}/${locale}/${localizedPath}`
 
   const pageEntries = pages.docs
     .map((page) => {
@@ -49,10 +47,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           }
 
           return {
-            url: `${env.NEXT_PUBLIC_SERVER_URL}/${locale}/${localizedPath}`,
+            url: pageUrl(locale, localizedPath),
             lastModified: page.updatedAt,
             changeFrequency: 'daily' as const,
-            priority: 0.7,
+            priority: localizedPath === HOME_PATH ? 1 : 0.7,
             alternates: {
               languages: Object.fromEntries(
                 routing.locales
@@ -63,10 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                       return null
                     }
 
-                    return [
-                      innerLocale,
-                      `${env.NEXT_PUBLIC_SERVER_URL}/${innerLocale}/${innerLocalizedPath}`
-                    ]
+                    return [innerLocale, pageUrl(innerLocale, innerLocalizedPath)]
                   })
                   .filter((item) => !!item)
               )
@@ -77,20 +72,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
     .flat()
 
-  const landingPageEntries = routing.locales.map((locale) => ({
-    url: `${env.NEXT_PUBLIC_SERVER_URL}/${locale}`,
-    lastModified: landingPage.updatedAt ?? new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 1,
-    alternates: {
-      languages: Object.fromEntries(
-        routing.locales.map((innerLocale) => [
-          innerLocale,
-          `${env.NEXT_PUBLIC_SERVER_URL}/${innerLocale}`
-        ])
-      )
-    }
-  }))
-
-  return [...pageEntries, ...landingPageEntries]
+  return pageEntries
 }

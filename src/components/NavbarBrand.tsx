@@ -12,7 +12,17 @@ interface NavbarBrandProps {
 export const NavbarBrand = ({ LinkElement, logo, title, onClose }: NavbarBrandProps) => (
   <LinkElement href="/" className="flex items-center gap-2 hover:no-underline" onClick={onClose}>
     {!!logo && typeof logo === 'object' && logo.url && (
-      <Image priority src={logo.url} alt="" unoptimized width={48} height={48} />
+      <Image
+        priority
+        src={logo.url}
+        alt=""
+        unoptimized
+        width={48}
+        height={48}
+        // Exactly as tall as the navigation bar (h-12); the width follows the image. Without this the
+        // base styles make the height follow the width, and a portrait logo sticks out of the bar.
+        className="brand-logo h-12 w-auto"
+      />
     )}
     <span className="font-display text-glow text-2xl">{title}</span>
   </LinkElement>

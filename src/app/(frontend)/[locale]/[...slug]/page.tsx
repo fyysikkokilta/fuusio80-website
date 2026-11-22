@@ -4,15 +4,15 @@ import { locale } from 'next/root-params'
 import { getTranslations } from 'next-intl/server'
 
 import { DraftModeBanner } from '@/components/DraftModeBanner'
-import { PageBanner } from '@/components/PageBanner'
+import { PageContent } from '@/components/PageContent'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
-import { RichText } from '@/components/RichText'
 import { SyncPageUrl } from '@/components/SyncPageUrl'
-import { TableOfContents } from '@/components/TableOfContents'
 import { env } from '@/env'
+import { redirect } from '@/i18n/navigation'
 import { getMainNavigation } from '@/lib/getMainNavigation'
 import { getPage } from '@/lib/getPage'
 import { isDraftMode } from '@/utils/draftMode'
+import { HOME_PATH } from '@/utils/homePath'
 
 // Event blocks sort events into upcoming and past by the current time, so re-render at least hourly.
 export const revalidate = 3600
@@ -87,6 +87,11 @@ export default async function Page({ params }: PageProps<'/[locale]/[...slug]'>)
   const curLocale = await locale()
   const slugPath = slug?.join('/') ?? ''
 
+  // The home page lives at the site root
+  if (slugPath === HOME_PATH) {
+    redirect({ href: '/', locale: curLocale })
+  }
+
   const isDraft = await isDraftMode()
   const { page, canonicalPath } = await getPage(slugPath, curLocale)
 
@@ -100,24 +105,7 @@ export default async function Page({ params }: PageProps<'/[locale]/[...slug]'>)
       <SyncPageUrl currentSlug={slugPath} canonicalPath={canonicalPath} locale={curLocale} />
       <DraftModeBanner pageId={page.id.toString()} isDraft={isDraft} />
       {isDraft ? <RefreshRouteOnSave /> : null}
-      <main id="page-content" className="flex w-full flex-col">
-        <PageBanner page={page} />
-        <section className="mx-auto mb-12 w-full max-w-7xl flex-1 p-6">
-          <div className={!page.fullWidth ? 'lg:ml-[20%]' : ''}>
-            <h1 className="font-display text-glow mb-8 w-fit pb-1 text-5xl wrap-break-word hyphens-auto">
-              {page.title}
-            </h1>
-          </div>
-          <div className="flex flex-col gap-8 lg:flex-row">
-            {!page.fullWidth && (
-              <TableOfContents show={page.showTableOfContents} richText={page.content} />
-            )}
-            <div className={!page.fullWidth ? 'lg:w-[80%]' : 'lg:w-full'}>
-              <RichText data={page.content} locale={curLocale} />
-            </div>
-          </div>
-        </section>
-      </main>
+      <PageContent page={page} locale={curLocale} />
     </>
   )
 }

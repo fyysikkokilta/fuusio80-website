@@ -56,6 +56,6 @@ export const PartnerSection: GlobalConfig = {
     }
   ],
   hooks: {
-    afterChange: [revalidateGlobal('partner-section')]
+    afterChange: [revalidateGlobal()]
   }
 }

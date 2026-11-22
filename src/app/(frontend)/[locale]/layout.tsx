@@ -6,7 +6,7 @@ import NextTopLoader from 'nextjs-toploader'
 
 import { bodyFont, displayFont } from '@/app/fonts'
 import { Footer } from '@/components/Footer'
-import { MainNavigation } from '@/components/Navigation'
+import { NavigationProvider } from '@/components/Navigation/NavigationProvider'
 import { Partners } from '@/components/Partners'
 import { SkipLink } from '@/components/SkipLink'
 import { env } from '@/env'
@@ -40,10 +40,11 @@ export default async function RootLayout({ children }: LayoutProps<'/[locale]'>)
         <NextIntlClientProvider>
           <NextTopLoader color="#fbdb1d" showSpinner={false} showForHashAnchor={false} />
           <SkipLink />
-          <MainNavigation navigation={navigation} />
-          {children}
-          {!!partners?.partners?.length && <Partners partnerData={partners} />}
-          <Footer footer={footer} locale={curLocale} />
+          <NavigationProvider navigation={navigation}>
+            {children}
+            {!!partners?.partners?.length && <Partners partnerData={partners} />}
+            <Footer footer={footer} locale={curLocale} />
+          </NavigationProvider>
         </NextIntlClientProvider>
       </body>
     </html>

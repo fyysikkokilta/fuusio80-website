@@ -2,7 +2,8 @@ const messages = {
   mainNavigation: {
     menu: 'Päävalikko',
     openMenu: 'Avaa valikko',
-    closeMenu: 'Sulje valikko'
+    closeMenu: 'Sulje valikko',
+    showMenu: 'Näytä päävalikko'
   },
   tableOfContents: {
     toggle: 'Avaa/sulje sisällysluettelo'
@@ -39,6 +40,10 @@ const messages = {
     signupOpens: 'Ilmoittautuminen aukeaa {date}',
     signupClosed: 'Ilmoittautuminen on päättynyt',
     fetchFailed: 'Tapahtumien haku epäonnistui. Katso tapahtumat osoitteesta'
+  },
+  rotatablePlane: {
+    label: 'Käännettävä kuva',
+    hint: 'Käännä kuva toisin päin vetämällä sivusuunnassa. Voit myös klikata, painaa Enter-näppäintä tai käyttää vasenta ja oikeaa nuolinäppäintä.'
   },
   pdfViewer: {
     openInNewTab: 'Avaa uudessa välilehdessä',

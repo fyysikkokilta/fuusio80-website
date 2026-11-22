@@ -18,7 +18,7 @@ export function DesktopMenu({ navigation }: { navigation: MainNavigation }) {
   return (
     <NavigationMenu.Root
       aria-label={t('mainNavigation.menu')}
-      className="bg-fuusio-night text-fk-white mx-auto hidden w-full min-w-max items-center justify-between px-2 font-bold lg:flex lg:px-8 xl:px-12 2xl:container"
+      className="bg-fuusio-night text-fk-white hidden w-full min-w-max items-center justify-between px-2 font-bold lg:flex lg:px-8 xl:px-12"
     >
       <NavigationMenu.List role="menubar" className="relative flex w-full items-center">
         <NavigationMenu.Item role="menuitem">

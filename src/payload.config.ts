@@ -18,7 +18,9 @@ import { fileURLToPath } from 'url'
 import { CardBlock } from './blocks/Card/config'
 import { CollapsibleBlock } from './blocks/Collapsible/config'
 import { EventsBlock } from './blocks/Events/config'
+import { LinkButtonsBlock } from './blocks/LinkButtons/config'
 import { PDFViewerBlock } from './blocks/PDFViewer/config'
+import { RotatablePlaneBlock } from './blocks/RotatablePlane/config'
 import { SectionCardsBlock } from './blocks/SectionCards/config'
 import { TeamBlock } from './blocks/Team/config'
 import { TwoColumnsBlock } from './blocks/TwoColumns/config'
@@ -28,11 +30,11 @@ import { Pages } from './collections/Pages'
 import { Users } from './collections/Users'
 import { env } from './env'
 import { Footer } from './globals/Footer'
-import { LandingPage } from './globals/LandingPage'
 import { MainNavigation } from './globals/MainNavigation'
 import { PartnerSection } from './globals/PartnerSection'
 import { migrations } from './migrations'
 import { enableOAuth } from './utils/enableOAuth'
+import { HOME_PATH } from './utils/homePath'
 import { textState } from './utils/textState'
 
 const filename = fileURLToPath(import.meta.url)
@@ -54,7 +56,7 @@ export default buildConfig({
       ]
     },
     livePreview: {
-      url: ({ collectionConfig, data, globalConfig, locale, req }) => {
+      url: ({ collectionConfig, data, locale, req }) => {
         const baseUrl = env.NEXT_PUBLIC_SERVER_URL
         if (collectionConfig) {
           switch (collectionConfig.slug) {
@@ -62,19 +64,13 @@ export default buildConfig({
               if (!data || !data.path) {
                 return null
               }
-              return `${baseUrl}/api/draft?slug=/${locale.code}/${data.path}`
-          }
-        } else if (globalConfig) {
-          switch (globalConfig.slug) {
-            case LandingPage.slug:
-              return `${baseUrl}/api/draft?slug=/${locale.code}`
+              return `${baseUrl}/api/draft?slug=/${locale.code}${data.path === HOME_PATH ? '' : `/${data.path}`}`
           }
         }
         req.payload.logger.error('No live preview case found for collection or global')
         return null
       },
       collections: [Pages.slug],
-      globals: [LandingPage.slug],
       breakpoints: [
         {
           label: 'Mobile',
@@ -110,13 +106,15 @@ export default buildConfig({
     CardBlock,
     CollapsibleBlock,
     EventsBlock,
+    LinkButtonsBlock,
     PDFViewerBlock,
+    RotatablePlaneBlock,
     SectionCardsBlock,
     TeamBlock,
     TwoColumnsBlock
   ],
   collections: [Documents, Media, Pages, Users],
-  globals: [MainNavigation, Footer, LandingPage, PartnerSection],
+  globals: [MainNavigation, Footer, PartnerSection],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
@@ -125,7 +123,9 @@ export default buildConfig({
           'card',
           'collapsible',
           'events',
+          'link-buttons',
           'pdf-viewer',
+          'rotatable-plane',
           'section-cards',
           'team',
           'two-columns'

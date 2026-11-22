@@ -2,6 +2,7 @@ import { SerializedLinkNode } from '@payloadcms/richtext-lexical'
 import { Locale } from 'next-intl'
 
 import { Page } from '@/payload-types'
+import { HOME_PATH } from '@/utils/homePath'
 
 export const internalDocToHref = (
   { linkNode }: { linkNode: SerializedLinkNode },
@@ -15,7 +16,7 @@ export const internalDocToHref = (
   switch (doc.relationTo) {
     case 'pages':
       const page = doc.value as unknown as Page
-      return `/${locale}/${page.path}`
+      return page.path === HOME_PATH ? `/${locale}` : `/${locale}/${page.path}`
     default:
       const url = doc.value as unknown as { url?: string; path?: string }
       if (url.url) {

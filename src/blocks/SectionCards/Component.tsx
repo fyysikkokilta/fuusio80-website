@@ -3,6 +3,7 @@ import Image from 'next/image'
 
 import { Link } from '@/i18n/navigation'
 import type { SectionCardsBlock as SectionCardsBlockType } from '@/payload-types'
+import { pageHref } from '@/utils/homePath'
 
 import { TiltCard } from './TiltCard'
 
@@ -19,7 +20,7 @@ export const SectionCards = ({ block }: SectionCardsProps) => (
       const background = typeof image === 'object' ? image : null
 
       return (
-        <Link key={id} href={`/${page.path}`} className="group block rounded-3xl no-underline">
+        <Link key={id} href={pageHref(page.path)} className="group block rounded-3xl no-underline">
           <TiltCard className="border-fk-yellow/60 bg-fuusio-surface group-hover:shadow-fuusio-orange/40 relative flex min-h-64 flex-col justify-end overflow-hidden rounded-3xl border-2 p-6 shadow-xl group-hover:shadow-2xl">
             {background?.url ? (
               <>

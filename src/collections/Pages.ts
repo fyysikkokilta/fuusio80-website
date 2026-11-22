@@ -4,6 +4,7 @@ import { publishedOrSignedIn } from '@/access/published-or-signed-in'
 import { env } from '@/env'
 import { revalidateCollection } from '@/hooks/revalidateCollection'
 import { revalidateDeletedCollection } from '@/hooks/revalidateDeletedCollection'
+import { HOME_PATH } from '@/utils/homePath'
 import { slugify } from '@/utils/slugify'
 
 import { signedIn } from '../access/signed-in'
@@ -44,7 +45,7 @@ export const Pages: CollectionConfig = {
       if (!doc?.path) return null
       const baseUrl = env.NEXT_PUBLIC_SERVER_URL
       const locale = typeof req.query?.locale === 'string' ? req.query.locale : req.locale || 'fi'
-      return `${baseUrl}/api/draft?slug=/${locale}/${doc.path}`
+      return `${baseUrl}/api/draft?slug=/${locale}${doc.path === HOME_PATH ? '' : `/${doc.path}`}`
     },
     group: 'Pages',
     description: 'Manage website pages'
@@ -75,7 +76,26 @@ export const Pages: CollectionConfig = {
               relationTo: 'media',
               admin: {
                 description:
-                  'Banner image of the page. Please ensure to provide a high enough quality image.'
+                  'Banner image of the page. It should have a transparent background, since it is placed over the page background. It is scaled to the width of the center column and never cropped.'
+              }
+            },
+            {
+              name: 'backgroundImage',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Background of the page, shown on both sides of the center column. It repeats downwards as it is, so it must tile seamlessly top to bottom. Sideways it repeats too, mirrored or not depending on the option below. It is drawn at its own pixel size.'
+              }
+            },
+            {
+              name: 'mirrorBackgroundHorizontally',
+              type: 'checkbox',
+              defaultValue: true,
+              admin: {
+                condition: (data) => !!data?.backgroundImage,
+                description:
+                  'Mirror every second copy of the background sideways, so the edges of neighbouring copies match. Turn off if the image already tiles seamlessly sideways or must not be mirrored.'
               }
             },
             {

@@ -2,6 +2,7 @@ import { ExternalLink, FileText, Folder } from 'lucide-react'
 
 import { Link } from '@/i18n/navigation'
 import type { Document, Page } from '@/payload-types'
+import { pageHref } from '@/utils/homePath'
 
 type LinkType = 'file' | 'page'
 
@@ -34,7 +35,7 @@ const getUrl = (document: Document | Page, type: LinkType): string => {
     return document.url || ''
   }
   if (type === 'page' && 'path' in document) {
-    return `/${document.path}`
+    return pageHref(document.path)
   }
   return '#'
 }

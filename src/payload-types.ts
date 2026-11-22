@@ -22,7 +22,9 @@ export interface Config {
     card: CardBlock;
     collapsible: CollapsibleBlock;
     events: EventsBlock;
+    'link-buttons': LinkButtonsBlock;
     'pdf-viewer': PDFViewerBlock;
+    'rotatable-plane': RotatablePlaneBlock;
     'section-cards': SectionCardsBlock;
     team: TeamBlock;
     'two-columns': TwoColumnsBlock;
@@ -55,13 +57,11 @@ export interface Config {
   globals: {
     'main-navigation': MainNavigation;
     footer: Footer;
-    'landing-page': LandingPage;
     'partner-section': PartnerSection;
   };
   globalsSelect: {
     'main-navigation': MainNavigationSelect<false> | MainNavigationSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
-    'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
     'partner-section': PartnerSectionSelect<false> | PartnerSectionSelect<true>;
   };
   locale: 'fi' | 'en';
@@ -170,6 +170,29 @@ export interface EventsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LinkButtonsBlock".
+ */
+export interface LinkButtonsBlock {
+  /**
+   * Buttons that open external sites. They sit side by side when there is room and stack on narrow screens.
+   */
+  buttons: {
+    /**
+     * Remember to provide all locales.
+     */
+    label: string;
+    /**
+     * Full address of the external site, starting with https://
+     */
+    url: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'link-buttons';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "PDFViewerBlock".
  */
 export interface PDFViewerBlock {
@@ -253,6 +276,23 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RotatablePlaneBlock".
+ */
+export interface RotatablePlaneBlock {
+  /**
+   * Front side. The shape of the plane follows this image, so give the back side the same proportions.
+   */
+  frontImage: number | Media;
+  /**
+   * Back side, seen when the plane is turned around.
+   */
+  backImage: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'rotatable-plane';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "SectionCardsBlock".
  */
 export interface SectionCardsBlock {
@@ -283,9 +323,17 @@ export interface Page {
   id: number;
   title: string;
   /**
-   * Banner image of the page. Please ensure to provide a high enough quality image.
+   * Banner image of the page. It should have a transparent background, since it is placed over the page background. It is scaled to the width of the center column and never cropped.
    */
   bannerImage?: (number | null) | Media;
+  /**
+   * Background of the page, shown on both sides of the center column. It repeats downwards as it is, so it must tile seamlessly top to bottom. Sideways it repeats too, mirrored or not depending on the option below. It is drawn at its own pixel size.
+   */
+  backgroundImage?: (number | null) | Media;
+  /**
+   * Mirror every second copy of the background sideways, so the edges of neighbouring copies match. Turn off if the image already tiles seamlessly sideways or must not be mirrored.
+   */
+  mirrorBackgroundHorizontally?: boolean | null;
   content: {
     root: {
       type: string;
@@ -402,6 +450,8 @@ export interface TwoColumnsBlock {
  */
 export interface User {
   id: number;
+  sub?: string | null;
+  email: string;
   updatedAt: string;
   createdAt: string;
   collection: 'users';
@@ -533,6 +583,8 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   bannerImage?: T;
+  backgroundImage?: T;
+  mirrorBackgroundHorizontally?: T;
   content?: T;
   path?: T;
   showTableOfContents?: T;
@@ -547,6 +599,8 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  sub?: T;
+  email?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -606,6 +660,10 @@ export interface MainNavigation {
    * The header logo of the website. This will be shown in the header of the website.
    */
   logo?: (number | null) | Media;
+  /**
+   * Logo that appears near the top of the free space left of the center column on wide screens (1920px and wider) when the header has been scrolled out of view. Hovering or clicking it brings the header back. If empty, the header logo is used.
+   */
+  floatingLogo?: (number | null) | Media;
   items: {
     /**
      * The label of the navigation item. Remember to provide all locales.
@@ -678,93 +736,6 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
- * Settings for the landing page
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "landing-page".
- */
-export interface LandingPage {
-  id: number;
-  /**
-   * Title of the landing page
-   */
-  title: string;
-  /**
-   * Short line shown under the title in the hero, e.g. the date and place.
-   */
-  subtitle?: string | null;
-  /**
-   * Buttons in the hero, e.g. a link to the registration.
-   */
-  heroLinks?:
-    | {
-        label: string;
-        /**
-         * Full URL (https://...) or a path inside this site (/fuusio).
-         */
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Background images of the hero. Multiple images are shown in a slideshow. Without images the hero has a plain dark background.
-   */
-  bannerImages?: (number | Media)[] | null;
-  /**
-   * Announcement for the landing page. This is shown right under the hero. Used for example when the registration opens.
-   */
-  announcement: {
-    /**
-     * Enable the announcement. If disabled, the announcement will not be shown.
-     */
-    enabled?: boolean | null;
-    /**
-     * Content of the announcement. Remember to provide all locales.
-     */
-    content?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    /**
-     * Pick a color
-     */
-    color: string;
-    /**
-     * Pick a color
-     */
-    textColor: string;
-  };
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
  * Partner organizations and their logos
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -803,6 +774,7 @@ export interface PartnerSection {
 export interface MainNavigationSelect<T extends boolean = true> {
   title?: T;
   logo?: T;
+  floatingLogo?: T;
   items?:
     | T
     | {
@@ -833,35 +805,6 @@ export interface MainNavigationSelect<T extends boolean = true> {
 export interface FooterSelect<T extends boolean = true> {
   content?: T;
   socials?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "landing-page_select".
- */
-export interface LandingPageSelect<T extends boolean = true> {
-  title?: T;
-  subtitle?: T;
-  heroLinks?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-        id?: T;
-      };
-  bannerImages?: T;
-  announcement?:
-    | T
-    | {
-        enabled?: T;
-        content?: T;
-        color?: T;
-        textColor?: T;
-      };
-  content?: T;
-  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

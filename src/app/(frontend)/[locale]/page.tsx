@@ -3,45 +3,40 @@ import { notFound } from 'next/navigation'
 import { locale } from 'next/root-params'
 
 import { DraftModeBanner } from '@/components/DraftModeBanner'
-import { FrontPageAnnouncement } from '@/components/FrontPageAnnouncement'
-import { FrontPageHero } from '@/components/FrontPageHero'
+import { PageContent } from '@/components/PageContent'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
-import { RichText } from '@/components/RichText'
 import { env } from '@/env'
-import { getLandingPage } from '@/lib/getLandingPage'
+import { getMainNavigation } from '@/lib/getMainNavigation'
+import { getPage } from '@/lib/getPage'
 import { isDraftMode } from '@/utils/draftMode'
+import { HOME_PATH } from '@/utils/homePath'
 
 // Event blocks sort events into upcoming and past by the current time, so re-render at least hourly.
 export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
   const curLocale = await locale()
-  const page = await getLandingPage(curLocale)
+  const { page } = await getPage(HOME_PATH, curLocale)
+  const siteName = (await getMainNavigation(curLocale)).title
 
-  const images = page?.bannerImages
-    ?.map((image) => {
-      if (typeof image === 'object') {
-        return {
-          url: image.url || '',
-          width: image.width || 100,
-          height: image.height || 100,
-          alt: image.alt || ''
+  const image =
+    page?.bannerImage && typeof page.bannerImage === 'object'
+      ? {
+          url: page.bannerImage.url || '',
+          width: page.bannerImage.width || 100,
+          height: page.bannerImage.height || 100,
+          alt: page.bannerImage.alt || ''
         }
-      }
-      return null
-    })
-    .filter((image) => !!image)
+      : null
 
   return {
-    title: page?.title,
-    description: page?.subtitle || undefined,
+    title: page?.title ?? siteName,
     metadataBase: new URL(env.NEXT_PUBLIC_SERVER_URL || ''),
     openGraph: {
-      title: page?.title,
-      description: page?.subtitle || '',
-      images: images || [],
+      title: page?.title ?? siteName,
+      images: image || [],
       url: `${env.NEXT_PUBLIC_SERVER_URL}/${curLocale}`,
-      siteName: page?.title,
+      siteName,
       locale: curLocale,
       type: 'website'
     },
@@ -51,29 +46,22 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function LandingPage() {
+export default async function HomePage() {
   const curLocale = await locale()
 
   const isDraft = await isDraftMode()
-  const landingPage = await getLandingPage(curLocale)
+  const { page } = await getPage(HOME_PATH, curLocale)
 
-  if (!landingPage) {
+  // Unpublished pages are visible only in draft mode
+  if (!page || (!isDraft && page._status !== 'published')) {
     notFound()
   }
 
   return (
     <>
-      <DraftModeBanner isDraft={isDraft} />
+      <DraftModeBanner pageId={page.id.toString()} isDraft={isDraft} />
       {isDraft ? <RefreshRouteOnSave /> : null}
-      <main id="page-content" className="flex w-full flex-col">
-        <FrontPageHero page={landingPage} />
-        <section className="mx-auto mb-12 w-full max-w-7xl flex-1 p-6">
-          <div className="flex flex-col gap-8">
-            <FrontPageAnnouncement page={landingPage} locale={curLocale} />
-            <RichText data={landingPage.content} locale={curLocale} />
-          </div>
-        </section>
-      </main>
+      <PageContent page={page} locale={curLocale} />
     </>
   )
 }

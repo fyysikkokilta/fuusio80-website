@@ -7,9 +7,8 @@ PostgreSQL, next-intl (fi/en).
 
 ## What is in it
 
-- **Landing page** (Payload global): hero with title, subtitle, buttons and optional background
-  images, an optional announcement, and free content.
 - **Pages** (Payload collection): free content with a localized path, optional table of contents.
+  The page with the path `home` is the front page, shown at `/fi` and `/en`.
 - **Content blocks**: Events (list, tabs or calendar), Section Cards (3D link cards), Team, Card,
   Collapsible, Two Columns, PDF Viewer.
 - **Sponsors**: the Partner Section global is shown at the bottom of every page.
