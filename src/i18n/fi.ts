@@ -38,8 +38,7 @@ const messages = {
     signup: 'Ilmoittaudu',
     moreInfo: 'Lisätiedot',
     signupOpens: 'Ilmoittautuminen aukeaa {date}',
-    signupClosed: 'Ilmoittautuminen on päättynyt',
-    fetchFailed: 'Tapahtumien haku epäonnistui. Katso tapahtumat osoitteesta'
+    signupClosed: 'Ilmoittautuminen on päättynyt'
   },
   rotatablePlane: {
     label: 'Käännettävä kuva',

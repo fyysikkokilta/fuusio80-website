@@ -38,8 +38,7 @@ const messages = {
     signup: 'Sign up',
     moreInfo: 'More information',
     signupOpens: 'Registration opens {date}',
-    signupClosed: 'Registration has ended',
-    fetchFailed: 'Loading the events failed. See the events at'
+    signupClosed: 'Registration has ended'
   },
   rotatablePlane: {
     label: 'Rotatable image',

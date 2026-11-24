@@ -4,9 +4,8 @@ import './calendar-styles.css'
 import type { Locale } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
 
-import { env } from '@/env'
-import { formatShortDate, type SiteEvent, splitEvents } from '@/lib/events'
-import { getEvents, ilmoEventUrl } from '@/lib/getEvents'
+import { buildEvents, formatShortDate, type SiteEvent, splitEvents } from '@/lib/events'
+import { getEvents } from '@/lib/getEvents'
 import type { EventsBlock as EventsBlockType } from '@/payload-types'
 
 import { CalendarClient } from './CalendarClient'
@@ -20,19 +19,14 @@ interface EventsProps {
 
 export const Events = async ({ block, locale }: EventsProps) => {
   const t = await getTranslations('events')
-  const events = await getEvents(locale, block.categories)
+  const entries = block.events ?? []
 
-  if (!events) {
-    return (
-      <p role="alert">
-        {t('fetchFailed')} <a href={env.ILMO_URL}>{new URL(env.ILMO_URL).host}</a>.
-      </p>
-    )
-  }
-
-  if (events.length === 0) {
+  if (entries.length === 0) {
     return <p>{t('noEvents')}</p>
   }
+
+  // If Ilmomasiina is down the cards still show what is in the CMS, just without dates.
+  const events = buildEvents(entries, await getEvents(), locale)
 
   // The page is re-rendered at least hourly (see `revalidate` in the page files), so "now" stays fresh enough.
   // oxlint-disable-next-line react/purity -- server component, renders once per request
@@ -48,15 +42,21 @@ export const Events = async ({ block, locale }: EventsProps) => {
       <CalendarClient
         locale={locale}
         // Open on the month of the next event, so the calendar is not empty at first sight
-        initialDate={(upcoming[0] ?? past[0]).start}
-        events={events.map((event) => ({
-          id: event.id,
-          title: event.title,
-          start: event.start,
-          end: event.end,
-          location: event.location,
-          url: ilmoEventUrl(event.slug, locale)
-        }))}
+        initialDate={(upcoming.find((event) => event.start) ?? past[0])?.start ?? now.toISOString()}
+        events={events.flatMap((event) =>
+          event.start
+            ? [
+                {
+                  id: event.id,
+                  title: event.title,
+                  start: event.start,
+                  end: event.end,
+                  location: event.location,
+                  url: event.link
+                }
+              ]
+            : []
+        )}
       />
     )
   }
@@ -70,7 +70,7 @@ export const Events = async ({ block, locale }: EventsProps) => {
         defaultValue={(upcoming[0] ?? chronological[0]).id}
         tabs={chronological.map((event) => ({
           id: event.id,
-          date: formatShortDate(event.start, locale),
+          date: event.start ? formatShortDate(event.start, locale) : '',
           title: event.title,
           content: card(event)
         }))}

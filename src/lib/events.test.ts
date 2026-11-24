@@ -2,10 +2,11 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import {
+  buildEvents,
   formatEventTime,
   getSignupState,
   ilmoEventSchema,
-  selectEvents,
+  slugFromLink,
   splitEvents
 } from './events.ts'
 
@@ -23,17 +24,52 @@ const ilmoEvent = (overrides: Record<string, unknown>) =>
     ...overrides
   })
 
-test('selectEvents filters by category, drops undated events and localizes with fallback', () => {
-  const events = [
-    ilmoEvent({}),
-    ilmoEvent({ id: 'b', category: 'excursiot' }),
-    ilmoEvent({ id: 'c', date: null })
+test('slugFromLink reads the slug from Finnish and English Ilmomasiina links', () => {
+  assert.equal(slugFromLink('https://ilmo.fyysikkokilta.fi/events/vuosijuhla'), 'vuosijuhla')
+  assert.equal(slugFromLink('https://ilmo.fyysikkokilta.fi/en/events/vuosijuhla?x=1'), 'vuosijuhla')
+  assert.equal(slugFromLink('https://ilmo.fyysikkokilta.fi/'), null)
+  assert.equal(slugFromLink('not a link'), null)
+})
+
+test('buildEvents takes dates from Ilmomasiina and text from the CMS entry', () => {
+  const entries = [
+    {
+      id: 'x',
+      title: 'Juhla',
+      description: 'Kuvaus',
+      link: 'https://ilmo.fyysikkokilta.fi/events/vuosijuhla'
+    },
+    { id: 'y', title: 'Muu', link: 'https://ilmo.fyysikkokilta.fi/events/puuttuu' }
   ]
-  const [event, ...rest] = selectEvents(events, [' fuusio 80 '], 'en')
-  assert.equal(rest.length, 0)
-  assert.equal(event.title, 'Annual ball')
-  assert.equal(event.location, 'Sali')
-  assert.equal(selectEvents(events, ['Fuusio 80'], 'fi')[0].title, 'Vuosijuhla')
+  const [found, missing] = buildEvents(entries, [ilmoEvent({})], 'en')
+  assert.equal(found.title, 'Juhla')
+  assert.equal(found.description, 'Kuvaus')
+  assert.equal(found.start, '2027-03-13T15:00:00.000Z')
+  assert.equal(found.location, 'Sali')
+  assert.equal(missing.start, null)
+  assert.equal(buildEvents(entries, null, 'fi')[0].start, null)
+})
+
+test('buildEvents uses the manual details of an event without signup', () => {
+  const [event] = buildEvents(
+    [
+      {
+        title: 'Sitsit',
+        noSignup: true,
+        link: 'https://ilmo.fyysikkokilta.fi/events/vuosijuhla',
+        startDate: '2027-03-12T16:00:00.000Z',
+        location: 'Kiltahuone',
+        price: 'Ilmainen'
+      }
+    ],
+    [ilmoEvent({})],
+    'fi'
+  )
+  assert.equal(event.link, null)
+  assert.equal(event.start, '2027-03-12T16:00:00.000Z')
+  assert.equal(event.location, 'Kiltahuone')
+  assert.equal(event.price, 'Ilmainen')
+  assert.equal(event.registrationStart, null)
 })
 
 test('splitEvents sorts upcoming soonest first and past latest first', () => {
@@ -51,6 +87,17 @@ test('splitEvents sorts upcoming soonest first and past latest first', () => {
   assert.deepEqual(
     past.map((event) => event.id),
     ['old', 'older']
+  )
+})
+
+test('events without a date count as upcoming and go last', () => {
+  const events = [
+    { id: 'none', start: null, end: null },
+    { id: 'soon', start: '2027-03-13T16:00:00Z', end: null }
+  ]
+  assert.deepEqual(
+    splitEvents(events, now).upcoming.map((event) => event.id),
+    ['soon', 'none']
   )
 })
 

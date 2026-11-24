@@ -31,8 +31,9 @@ const heading = (value: string) => element('heading', [text(value)], { tag: 'h2'
 const block = (fields: Node): Node => ({ type: 'block', format: '', version: 2, fields })
 const richText = (...children: Node[]) => ({ root: element('root', children) }) as never
 
-const eventsBlock = (categories: string[], layout: 'list' | 'tabs' | 'calendar', show = 'all') =>
-  block({ blockType: 'events', categories, layout, show })
+// Events are added by hand in the CMS, so the seeded blocks start out empty.
+const eventsBlock = (layout: 'list' | 'tabs' | 'calendar', show = 'all') =>
+  block({ blockType: 'events', events: [], layout, show })
 
 // Skip the Next.js cache revalidation hooks: there is no Next.js server in a script.
 const context = { skipRevalidate: true }
@@ -46,7 +47,7 @@ const pages = [
         paragraph(
           'Fyysikkokilta täyttää 80 vuotta. Juhlavuoden tapahtumat löytyvät tältä sivulta.'
         ),
-        eventsBlock(['Juhlavuositapahtumat'], 'list')
+        eventsBlock('list')
       )
     },
     en: {
@@ -54,7 +55,7 @@ const pages = [
       path: 'jubilee-year',
       content: richText(
         paragraph('The Guild of Physics turns 80. The events of the jubilee year are listed here.'),
-        eventsBlock(['Juhlavuositapahtumat'], 'list')
+        eventsBlock('list')
       )
     }
   },
@@ -66,7 +67,7 @@ const pages = [
         paragraph(
           'Fuusiota edeltävän juhlaviikon tapahtumat. Valitse tapahtuma nähdäksesi sen tiedot.'
         ),
-        eventsBlock(['Fuusioviikko'], 'tabs')
+        eventsBlock('tabs')
       )
     },
     en: {
@@ -74,7 +75,7 @@ const pages = [
       path: 'fuusio-week',
       content: richText(
         paragraph('Events of the week leading up to Fuusio. Pick an event to see its details.'),
-        eventsBlock(['Fuusioviikko'], 'tabs')
+        eventsBlock('tabs')
       )
     }
   },
@@ -87,7 +88,7 @@ const pages = [
           'Fuusio 80 juhlitaan 13.3.2027. Viikonloppuun kuuluvat cocktailtilaisuus, pääjuhla, jatkot ja seuraavan päivän sillisaamiainen.'
         ),
         heading('Ilmoittautuminen'),
-        eventsBlock(['Fuusio 80'], 'list', 'upcoming')
+        eventsBlock('list', 'upcoming')
       )
     },
     en: {
@@ -98,7 +99,7 @@ const pages = [
           'Fuusio 80 is celebrated on 13 March 2027. The weekend includes a cocktail event, the main party, an afterparty and a herring breakfast the next day.'
         ),
         heading('Registration'),
-        eventsBlock(['Fuusio 80'], 'list', 'upcoming')
+        eventsBlock('list', 'upcoming')
       )
     }
   },
@@ -165,7 +166,7 @@ const homeContent = (locale: 'fi' | 'en') =>
       }))
     }),
     heading(locale === 'fi' ? 'Kalenteri' : 'Calendar'),
-    eventsBlock(['Juhlavuositapahtumat', 'Fuusioviikko', 'Fuusio 80'], 'calendar')
+    eventsBlock('calendar')
   )
 const home = await payload.create({
   collection: 'pages',

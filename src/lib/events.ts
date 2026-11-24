@@ -27,70 +27,109 @@ export const ilmoEventSchema = z.object({
 
 export type IlmoEvent = z.infer<typeof ilmoEventSchema>
 
-/** An event with a date, in the reader's language. */
+export interface EventImage {
+  url: string
+  alt: string
+  blurDataUrl: string | null
+}
+
+/** An event entered in the CMS. The fields from Ilmomasiina are null when the event is not found there. */
 export interface SiteEvent {
   id: string
-  slug: string
   title: string
-  start: string
+  description: string | null
+  image: EventImage | null
+  /** Ilmomasiina link. Null for events without signup. */
+  link: string | null
+  start: string | null
   end: string | null
   registrationStart: string | null
   registrationEnd: string | null
-  description: string | null
   location: string | null
   price: string | null
+}
+
+/** One entry of the events block, as saved by the CMS. */
+export interface EventEntry {
+  id?: string | null
+  title: string
+  description?: string | null
+  noSignup?: boolean | null
+  link?: string | null
+  startDate?: string | null
+  endDate?: string | null
+  location?: string | null
+  price?: string | null
+  image?: number | { url?: string | null; alt?: string | null; blurDataUrl?: string | null } | null
 }
 
 const TIME_ZONE = 'Europe/Helsinki'
 const intlLocale = (locale: string) => (locale === 'fi' ? 'fi-FI' : 'en-GB')
 const time = (value: string) => new Date(value).getTime()
 
-/** Picks the translation for the locale and falls back to the event's default language field by field. */
-export const localizeEvent = (event: IlmoEvent & { date: string }, locale: string): SiteEvent => {
-  const translation = event.languages[locale]
-  const pick = (key: 'title' | 'description' | 'location' | 'price') =>
-    translation?.[key] || event[key] || null
-
-  return {
-    id: event.id,
-    slug: event.slug,
-    title: pick('title') ?? event.title,
-    start: event.date,
-    end: event.endDate ?? null,
-    registrationStart: event.registrationStartDate ?? null,
-    registrationEnd: event.registrationEndDate ?? null,
-    description: pick('description'),
-    location: pick('location'),
-    price: pick('price')
+/** The Ilmomasiina slug of an event link such as https://ilmo.fyysikkokilta.fi/en/events/fuusio-80. */
+export const slugFromLink = (link: string) => {
+  try {
+    const slug = new URL(link).pathname.match(/\/events\/([^/]+)/)?.[1]
+    return slug ? decodeURIComponent(slug) : null
+  } catch {
+    return null
   }
 }
 
-/** Keeps dated events of the given categories (case-insensitive). Signup-only events without a date are left out. */
-export const selectEvents = (
-  events: readonly IlmoEvent[],
-  categories: readonly string[],
+/** Joins the CMS entries with the Ilmomasiina events behind their links. Pass null when Ilmomasiina is unreachable. */
+export const buildEvents = (
+  entries: readonly EventEntry[],
+  ilmoEvents: readonly IlmoEvent[] | null,
   locale: string
-) => {
-  const wanted = new Set(categories.map((category) => category.trim().toLowerCase()))
+): SiteEvent[] => {
+  const bySlug = new Map((ilmoEvents ?? []).map((event) => [event.slug, event]))
 
-  return events
-    .filter((event): event is IlmoEvent & { date: string } => !!event.date)
-    .filter((event) => wanted.has(event.category.trim().toLowerCase()))
-    .map((event) => localizeEvent(event, locale))
+  return entries.map((entry, index) => {
+    const manual = !!entry.noSignup
+    const slug = !manual && entry.link ? slugFromLink(entry.link) : null
+    const ilmo = slug ? bySlug.get(slug) : undefined
+    const translation = ilmo?.languages[locale]
+    const media = typeof entry.image === 'object' && entry.image?.url ? entry.image : null
+
+    return {
+      id: entry.id ?? String(index),
+      title: entry.title,
+      description: entry.description || null,
+      image: media?.url
+        ? { url: media.url, alt: media.alt || '', blurDataUrl: media.blurDataUrl ?? null }
+        : null,
+      link: manual ? null : (entry.link ?? null),
+      // Events without signup carry their own details, the others get them from Ilmomasiina
+      start: manual ? (entry.startDate ?? null) : (ilmo?.date ?? null),
+      end: manual ? (entry.endDate ?? null) : (ilmo?.endDate ?? null),
+      registrationStart: ilmo?.registrationStartDate ?? null,
+      registrationEnd: ilmo?.registrationEndDate ?? null,
+      location: manual ? entry.location || null : translation?.location || ilmo?.location || null,
+      price: manual ? entry.price || null : translation?.price || ilmo?.price || null
+    }
+  })
 }
 
-/** Splits events into upcoming (soonest first) and past (latest first). An event is past once it has ended. */
+/**
+ * Splits events into upcoming (soonest first) and past (latest first). An event is past once it has ended.
+ * Events without a date (not found in Ilmomasiina) count as upcoming and go last.
+ */
 export const splitEvents = <T extends Pick<SiteEvent, 'start' | 'end'>>(
   events: readonly T[],
   now: Date
 ) => {
-  const isPast = (event: T) => time(event.end || event.start) < now.getTime()
+  const startTime = (event: T) => (event.start ? time(event.start) : Number.MAX_SAFE_INTEGER)
+  const isPast = (event: T) => {
+    const finish = event.end || event.start
+    return finish !== null && time(finish) < now.getTime()
+  }
 
   return {
     upcoming: events
       .filter((event) => !isPast(event))
-      .toSorted((a, b) => time(a.start) - time(b.start)),
-    past: events.filter(isPast).toSorted((a, b) => time(b.start) - time(a.start))
+      .toSorted((a, b) => startTime(a) - startTime(b)),
+    past: events.filter(isPast).toSorted((a, b) => startTime(b) - startTime(a))
   }
 }
 
@@ -117,7 +156,10 @@ export const formatDateTime = (value: string, locale: string) =>
     timeZone: TIME_ZONE
   }).format(new Date(value))
 
-export const formatEventTime = ({ start, end }: Pick<SiteEvent, 'start' | 'end'>, locale: string) =>
+export const formatEventTime = (
+  { start, end }: { start: string; end: string | null },
+  locale: string
+) =>
   end
     ? new Intl.DateTimeFormat(intlLocale(locale), {
         weekday: 'short',

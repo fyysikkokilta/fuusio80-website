@@ -15,7 +15,7 @@ interface CalendarEvent {
   start: string
   end: string | null
   location: string | null
-  url: string
+  url: string | null
 }
 
 interface BigCalendarEvent extends Event {
@@ -43,7 +43,7 @@ function EventElement({ event, title }: EventProps<BigCalendarEvent>) {
   return (
     <a
       className="text-fk-black flex h-full flex-col font-bold no-underline"
-      href={event.resource.url}
+      href={event.resource.url ?? undefined}
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -59,7 +59,7 @@ function MonthViewEventElement({ event, title }: EventProps<BigCalendarEvent>) {
   return (
     <a
       className="text-fk-black flex h-full flex-col font-bold no-underline"
-      href={event.resource.url}
+      href={event.resource.url ?? undefined}
       target="_blank"
       rel="noopener noreferrer"
     >

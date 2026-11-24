@@ -156,9 +156,34 @@ export interface CollapsibleBlock {
  */
 export interface EventsBlock {
   /**
-   * Ilmomasiina categories to show, written exactly like the "Category" field of the events in ilmo.fyysikkokilta.fi (e.g. Juhlavuositapahtumat). Events are read from Ilmomasiina, so they are typed in only there.
+   * Add the events by hand. Date, location, price and the signup state are read automatically from the Ilmomasiina event behind the link. Events are sorted into upcoming and past by that date, so the order here does not matter.
    */
-  categories: string[];
+  events?:
+    | {
+        title: string;
+        /**
+         * Shown as a square next to the description.
+         */
+        image?: (number | null) | Media;
+        /**
+         * Short description. Line breaks are kept.
+         */
+        description?: string | null;
+        /**
+         * For events that are not in Ilmomasiina. Instead of the link, you enter the date, location and price here.
+         */
+        noSignup?: boolean | null;
+        /**
+         * Link to the event in Ilmomasiina, e.g. https://ilmo.fyysikkokilta.fi/events/fuusio-80
+         */
+        link?: string | null;
+        startDate?: string | null;
+        endDate?: string | null;
+        location?: string | null;
+        price?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Tabs keep the page short: the reader picks an event and sees only that one. Good for the Fuusio week.
    */
@@ -167,6 +192,31 @@ export interface EventsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'events';
+}
+/**
+ * Upload and manage media files. If you want to change an image in the media library, please replace the image with the new one instead of uploading a new version. Beware that this will change the image in all pages that use it.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Alternative text for the image for accessibility. Should be provided when the image provides additional information for the page reader or acts as an interactive element. For example, an image with info about an event or a button with an image should have an alt text. In these cases, the alt text should give the same information as the image or tell the action of the button, respectively.
+   */
+  alt?: string | null;
+  blurDataUrl: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -237,31 +287,6 @@ export interface Document {
    * Upload a thumbnail image for the document
    */
   thumbnail?: (number | null) | Media;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * Upload and manage media files. If you want to change an image in the media library, please replace the image with the new one instead of uploading a new version. Beware that this will change the image in all pages that use it.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  /**
-   * Alternative text for the image for accessibility. Should be provided when the image provides additional information for the page reader or acts as an interactive element. For example, an image with info about an event or a button with an image should have an alt text. In these cases, the alt text should give the same information as the image or tell the action of the button, respectively.
-   */
-  alt?: string | null;
-  blurDataUrl: string;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
