@@ -98,7 +98,7 @@ export const MainNavigation: GlobalConfig = {
       relationTo: 'media',
       admin: {
         description:
-          'Logo that appears near the top of the free space left of the center column on wide screens (1920px and wider) when the header has been scrolled out of view. Hovering or clicking it brings the header back. If empty, the header logo is used.'
+          'Logo that appears near the top of the free space left of the center column on wide screens (1655px and wider) when the header has been scrolled out of view. Hovering or clicking it brings the header back. If empty, the header logo is used.'
       }
     },
     {

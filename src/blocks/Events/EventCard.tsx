@@ -1,4 +1,4 @@
-import { CalendarDays, ExternalLink, MapPin, Ticket } from 'lucide-react'
+import { CalendarDays, MapPin, Ticket } from 'lucide-react'
 import Image from 'next/image'
 import type { Locale } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
@@ -19,10 +19,10 @@ export const EventCard = async ({ event, locale, now, dimmed }: EventCardProps) 
   const dim = dimmed ? 'opacity-70' : ''
 
   return (
-    <article className="border-fk-yellow/50 bg-fuusio-surface/70 my-4 rounded-2xl border p-5">
+    <article className="border-fuusio-gold/50 bg-fuusio-darkblue/70 my-4 rounded-2xl border p-5">
       <h3 className={`mt-0! mb-3! no-underline ${dim}`}>{event.title}</h3>
       {(event.start || event.location || event.price) && (
-        <p className={`text-fk-yellow my-2! flex flex-wrap gap-x-6 gap-y-1 font-bold ${dim}`}>
+        <p className={`text-fuusio-gold my-2! flex flex-wrap gap-x-6 gap-y-1 font-bold ${dim}`}>
           {event.start && (
             <span className="inline-flex items-center gap-2">
               <CalendarDays size={18} aria-hidden="true" />
@@ -77,10 +77,9 @@ export const EventCard = async ({ event, locale, now, dimmed }: EventCardProps) 
             href={event.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-glow hover:text-fk-black inline-flex items-center gap-2 rounded-full px-6 py-2 font-bold no-underline transition-transform hover:scale-105"
+            className="bg-fuusio-gold text-fuusio-darkblue hover:text-fuusio-darkblue inline-flex items-center rounded-full px-6 py-2 font-bold no-underline transition-transform hover:scale-105"
           >
             {signupState === 'open' ? t('signup') : t('moreInfo')}
-            <ExternalLink size={18} aria-hidden="true" />
           </a>
           {signupState === 'notYetOpen' && event.registrationStart && (
             <span>

@@ -195,7 +195,7 @@ export const TableOfContents = ({ show, richText }: TableOfContentsProps) => {
     <>
       <nav
         ref={mobileNavRef}
-        className="border-fk-yellow/50 bg-fuusio-night/90 fixed top-0 left-0 z-10 w-full overflow-y-auto border-b backdrop-blur-sm lg:hidden"
+        className="border-fuusio-gold/50 bg-fuusio-darkblue/90 fixed top-0 left-0 z-10 w-full overflow-y-auto border-b backdrop-blur-sm lg:hidden"
       >
         {activeHeading && (
           <div className="flex items-center justify-between">
@@ -220,7 +220,7 @@ export const TableOfContents = ({ show, richText }: TableOfContentsProps) => {
                     key={heading.id}
                     className={`rounded-md border-2 transition-colors duration-200 ${
                       activeId === heading.id
-                        ? 'bg-fk-yellow text-fk-black border-fk-black'
+                        ? 'bg-fuusio-gold text-fk-black border-fk-black'
                         : 'border-transparent'
                     }`}
                     style={{
@@ -244,7 +244,7 @@ export const TableOfContents = ({ show, richText }: TableOfContentsProps) => {
 
       <nav
         className={`scrollbar ${
-          headings.length > 0 ? 'border-fk-yellow/50' : 'border-transparent'
+          headings.length > 0 ? 'border-fuusio-gold/50' : 'border-transparent'
         } sticky top-4 h-fit max-h-[calc(100dvh-2rem)] w-[20%] overflow-y-auto rounded border-2 max-lg:hidden`}
       >
         <ul className="ml-0 p-2">
@@ -253,7 +253,7 @@ export const TableOfContents = ({ show, richText }: TableOfContentsProps) => {
               key={heading.id}
               className={`rounded-md border-2 transition-colors duration-200 ${
                 activeId === heading.id
-                  ? 'bg-fk-yellow text-fk-black border-fk-black'
+                  ? 'bg-fuusio-gold text-fk-black border-fk-black'
                   : 'border-transparent'
               }`}
               style={{

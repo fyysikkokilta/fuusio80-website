@@ -7,12 +7,10 @@
 
 @theme {
   /* Fuusio 80 palette: the guild's black, yellow and white, plus a colorful fusion glow as accents */
-  --color-fuusio-deep: #000000; /* Footer, sponsors */
-  --color-fuusio-night: #0b0a06; /* Page background, header: true black with a hint of warmth, not grey */
-  --color-fuusio-surface: #1d1803; /* Raised surfaces: cards, tinted with yellow */
-  --color-fuusio-pink: #ff4d9d; /* Accent */
-  --color-fuusio-orange: #ff8a04; /* Accent, same as website orange */
-  --color-fuusio-sky: #6fe3ff; /* Cool accent for small details */
+  --color-fuusio-darkblue: #00274f; /* Page background, header */
+  --color-fuusio-beige: #ddd3a3; /* Raised surfaces: cards */
+  --color-fuusio-lightblue: #60878a; /* Accent */
+  --color-fuusio-gold: #d8b435; /* Main accent: lines, links, highlights */
 
   --color-fk-white: #ffffff; /* FK white */
 
@@ -72,14 +70,14 @@
     font-weight: 800;
     text-decoration: underline;
     text-decoration-style: wavy;
-    text-decoration-color: var(--color-fk-yellow);
+    text-decoration-color: var(--color-fuusio-gold);
     text-decoration-thickness: 3px;
     text-underline-offset: 8px;
   }
 
   /* Links */
   .prose-fk a {
-    color: var(--color-fk-yellow);
+    color: var(--color-fuusio-gold);
     text-decoration: underline;
     text-decoration-style: solid;
     text-decoration-thickness: 2px;
@@ -89,7 +87,7 @@
   }
 
   .prose-fk a:hover {
-    color: var(--color-fuusio-pink);
+    color: var(--color-fuusio-lightblue);
     text-decoration-thickness: 3px;
   }
 
@@ -100,8 +98,8 @@
 
   /* Blockquotes */
   .prose-fk blockquote {
-    border-left: 4px solid var(--color-fk-yellow);
-    background-color: var(--color-fuusio-surface);
+    border-left: 4px solid var(--color-fuusio-gold);
+    background-color: var(--color-fuusio-beige);
     font-style: italic;
     color: var(--color-fk-white);
     padding-left: 1.5rem;
@@ -124,7 +122,7 @@
   }
 
   .prose-fk ul li::marker {
-    color: var(--color-fk-yellow);
+    color: var(--color-fuusio-gold);
   }
 
   /* Ordered lists */
@@ -133,7 +131,7 @@
   }
 
   .prose-fk ol li::marker {
-    color: var(--color-fk-yellow);
+    color: var(--color-fuusio-gold);
     font-weight: bold;
   }
 
@@ -173,7 +171,7 @@
   .prose-fk input[type='checkbox'] {
     width: 1.25em;
     height: 1.25em;
-    accent-color: var(--color-fk-yellow);
+    accent-color: var(--color-fuusio-gold);
     border-radius: 0.375em;
     border: 2px solid var(--color-fk-gray-lightest);
     margin-right: 0.5em;
@@ -186,7 +184,7 @@
 
   .prose-fk input[type='checkbox']:focus {
     outline: none;
-    border-color: var(--color-fk-yellow);
+    border-color: var(--color-fuusio-gold);
     box-shadow: 0 0 0 2px var(--color-fk-yellow-light);
   }
 
@@ -209,7 +207,7 @@
   .prose-fk th {
     font-weight: bold;
     color: var(--color-fk-gray);
-    background: var(--color-fk-yellow);
+    background: var(--color-fuusio-gold);
   }
 
   .prose-fk tr:nth-child(even) td {
@@ -219,19 +217,17 @@
   /* The fusion glow: yellow core, orange and pink halo, fading into the night */
   .hero-glow {
     background:
-      radial-gradient(circle at 50% 115%, rgb(251 219 29 / 0.95), transparent 38%),
-      radial-gradient(circle at 50% 120%, rgb(255 138 4 / 0.9), transparent 55%),
-      radial-gradient(circle at 15% 100%, rgb(255 77 157 / 0.75), transparent 50%),
-      radial-gradient(circle at 85% 100%, rgb(255 77 157 / 0.75), transparent 50%),
-      radial-gradient(circle at 80% 0%, rgb(111 227 255 / 0.25), transparent 40%),
-      var(--color-fuusio-night);
+      radial-gradient(circle at 50% 115%, rgb(216 180 53 / 0.95), transparent 38%),
+      radial-gradient(circle at 15% 100%, rgb(96 135 138 / 0.75), transparent 50%),
+      radial-gradient(circle at 85% 100%, rgb(96 135 138 / 0.75), transparent 50%),
+      var(--color-fuusio-darkblue);
   }
 
   /* Global focus ring for all focusable elements */
   *:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 2px var(--color-fk-yellow),
+      0 0 0 2px var(--color-fuusio-gold),
       0 0 0 4px transparent;
     border-radius: 0.375rem;
   }
@@ -249,18 +245,5 @@
 }
 
 @utility text-glow {
-  background: linear-gradient(
-    100deg,
-    var(--color-fk-yellow),
-    var(--color-fuusio-orange) 55%,
-    var(--color-fuusio-pink)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@utility bg-glow {
-  background: linear-gradient(100deg, var(--color-fk-yellow), var(--color-fuusio-orange));
-  color: var(--color-fk-black);
+  color: var(--color-fuusio-beige);
 }

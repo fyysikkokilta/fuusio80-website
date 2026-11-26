@@ -63,7 +63,7 @@ export const PDFViewer = ({ block }: PDFViewerProps) => {
                 modal={false}
               >
                 <Select.Trigger
-                  className="text-fk-gray focus-visible:ring-fk-yellow group flex w-full items-center justify-between border-none bg-transparent text-lg font-semibold outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none"
+                  className="text-fk-gray focus-visible:ring-fuusio-gold group flex w-full items-center justify-between border-none bg-transparent text-lg font-semibold outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none"
                   aria-label={t('pdfViewer.selectDocument')}
                 >
                   <Select.Value>
@@ -93,7 +93,7 @@ export const PDFViewer = ({ block }: PDFViewerProps) => {
                             className={(state) =>
                               `flex cursor-pointer items-center justify-between px-4 py-2 transition-colors ${
                                 state.selected
-                                  ? 'bg-fk-yellow text-fk-black'
+                                  ? 'bg-fuusio-gold text-fk-black'
                                   : state.highlighted
                                     ? 'bg-fk-gray-lightest text-fk-gray'
                                     : 'text-fk-gray'

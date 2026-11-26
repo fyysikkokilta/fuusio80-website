@@ -58,11 +58,13 @@ export interface Config {
     'main-navigation': MainNavigation;
     footer: Footer;
     'partner-section': PartnerSection;
+    'site-design': SiteDesign;
   };
   globalsSelect: {
     'main-navigation': MainNavigationSelect<false> | MainNavigationSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'partner-section': PartnerSectionSelect<false> | PartnerSectionSelect<true>;
+    'site-design': SiteDesignSelect<false> | SiteDesignSelect<true>;
   };
   locale: 'fi' | 'en';
   widgets: {
@@ -351,14 +353,6 @@ export interface Page {
    * Banner image of the page. It should have a transparent background, since it is placed over the page background. It is scaled to the width of the center column and never cropped.
    */
   bannerImage?: (number | null) | Media;
-  /**
-   * Background of the page, shown on both sides of the center column. It repeats downwards as it is, so it must tile seamlessly top to bottom. Sideways it repeats too, mirrored or not depending on the option below. It is drawn at its own pixel size.
-   */
-  backgroundImage?: (number | null) | Media;
-  /**
-   * Mirror every second copy of the background sideways, so the edges of neighbouring copies match. Turn off if the image already tiles seamlessly sideways or must not be mirrored.
-   */
-  mirrorBackgroundHorizontally?: boolean | null;
   content: {
     root: {
       type: string;
@@ -608,8 +602,6 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   bannerImage?: T;
-  backgroundImage?: T;
-  mirrorBackgroundHorizontally?: T;
   content?: T;
   path?: T;
   showTableOfContents?: T;
@@ -686,7 +678,7 @@ export interface MainNavigation {
    */
   logo?: (number | null) | Media;
   /**
-   * Logo that appears near the top of the free space left of the center column on wide screens (1920px and wider) when the header has been scrolled out of view. Hovering or clicking it brings the header back. If empty, the header logo is used.
+   * Logo that appears near the top of the free space left of the center column on wide screens (1655px and wider) when the header has been scrolled out of view. Hovering or clicking it brings the header back. If empty, the header logo is used.
    */
   floatingLogo?: (number | null) | Media;
   items: {
@@ -793,6 +785,29 @@ export interface PartnerSection {
   createdAt?: string | null;
 }
 /**
+ * Background graphics shared by every page, including the error and 404 pages
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-design".
+ */
+export interface SiteDesign {
+  id: number;
+  /**
+   * Background of the site, shown on both sides of the center column. It repeats downwards as it is, so it must tile seamlessly top to bottom. Sideways it repeats too, mirrored or not depending on the option below. It is drawn at its own pixel size.
+   */
+  backgroundImage?: (number | null) | Media;
+  /**
+   * Mirror every second copy of the background sideways, so the edges of neighbouring copies match. Turn off if the image already tiles seamlessly sideways or must not be mirrored.
+   */
+  mirrorBackgroundHorizontally?: boolean | null;
+  /**
+   * Graphic along the very left edge of the page, mirrored on the right edge. It tiles downwards over the background, behind the center column, and scrolls at half the speed of the page. It must tile seamlessly top to bottom. It only uses the free space beside the center column: it is drawn at its own pixel size, scaled down to fit that space if it is wider, and not shown on screens narrower than 1655px, the width from which the floating logo of the header is shown.
+   */
+  sideGraphic?: (number | null) | Media;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "main-navigation_select".
  */
@@ -848,6 +863,18 @@ export interface PartnerSectionSelect<T extends boolean = true> {
         logo?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-design_select".
+ */
+export interface SiteDesignSelect<T extends boolean = true> {
+  backgroundImage?: T;
+  mirrorBackgroundHorizontally?: T;
+  sideGraphic?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

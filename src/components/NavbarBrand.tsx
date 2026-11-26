@@ -19,7 +19,7 @@ export const NavbarBrand = ({ LinkElement, logo, title, onClose }: NavbarBrandPr
         unoptimized
         width={48}
         height={48}
-        // Exactly as tall as the navigation bar (h-12); the width follows the image. Without this the
+        // Exactly as tall as the navigation items (h-12); the width follows the image. Without this the
         // base styles make the height follow the width, and a portrait logo sticks out of the bar.
         className="brand-logo h-12 w-auto"
       />

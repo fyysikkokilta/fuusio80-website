@@ -9,7 +9,7 @@ interface PartnersProps {
 
 export const Partners = ({ partnerData }: PartnersProps) => {
   return (
-    <section className="border-fk-yellow/50 bg-fuusio-deep text-fk-white w-full border-t py-10">
+    <section className="border-fuusio-gold/50 bg-fk-black text-fk-white w-full border-t py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="font-display mb-10 text-center text-3xl">{partnerData.title}</h2>
         <div className="grid grid-cols-2 items-center justify-items-center gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-4">

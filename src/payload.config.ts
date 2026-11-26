@@ -32,6 +32,7 @@ import { env } from './env'
 import { Footer } from './globals/Footer'
 import { MainNavigation } from './globals/MainNavigation'
 import { PartnerSection } from './globals/PartnerSection'
+import { SiteDesign } from './globals/SiteDesign'
 import { migrations } from './migrations'
 import { enableOAuth } from './utils/enableOAuth'
 import { HOME_PATH } from './utils/homePath'
@@ -114,7 +115,7 @@ export default buildConfig({
     TwoColumnsBlock
   ],
   collections: [Documents, Media, Pages, Users],
-  globals: [MainNavigation, Footer, PartnerSection],
+  globals: [MainNavigation, Footer, PartnerSection, SiteDesign],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,

@@ -18,7 +18,7 @@ export function DesktopMenu({ navigation }: { navigation: MainNavigation }) {
   return (
     <NavigationMenu.Root
       aria-label={t('mainNavigation.menu')}
-      className="bg-fuusio-night text-fk-white hidden w-full min-w-max items-center justify-between px-2 font-bold lg:flex lg:px-8 xl:px-12"
+      className="text-fk-white border-fuusio-gold hidden w-full min-w-max items-center justify-between border-y px-2 py-1 font-bold lg:flex lg:px-8 xl:px-12"
     >
       <NavigationMenu.List role="menubar" className="relative flex w-full items-center">
         <NavigationMenu.Item role="menuitem">
@@ -49,7 +49,7 @@ export function DesktopMenu({ navigation }: { navigation: MainNavigation }) {
                   className={
                     topLevelClassName +
                     ' border-transparent' +
-                    (isActiveItem ? ' text-fk-yellow' : '')
+                    (isActiveItem ? ' text-fuusio-gold' : '')
                   }
                 >
                   {item.label}
@@ -69,8 +69,8 @@ export function DesktopMenu({ navigation }: { navigation: MainNavigation }) {
                 <NavigationMenu.Trigger
                   className={
                     topLevelClassName +
-                    ' border-fk-yellow' +
-                    (childIsActive ? ' text-fk-yellow' : '')
+                    ' border-fuusio-gold' +
+                    (childIsActive ? ' text-fuusio-gold' : '')
                   }
                 >
                   {item.label}
@@ -87,7 +87,7 @@ export function DesktopMenu({ navigation }: { navigation: MainNavigation }) {
                               href={childPath}
                               active={isActiveChild}
                               className={
-                                linkCardClassName + (isActiveChild ? ' text-fk-yellow' : '')
+                                linkCardClassName + (isActiveChild ? ' text-fuusio-gold' : '')
                               }
                             >
                               {child.label}
@@ -118,9 +118,9 @@ export function DesktopMenu({ navigation }: { navigation: MainNavigation }) {
             ['--easing' as string]: 'cubic-bezier(0.22, 1, 0.36, 1)'
           }}
         >
-          <NavigationMenu.Popup className="data-[ending-style]:easing-[ease] bg-fuusio-night text-fk-white relative h-(--popup-height) origin-(--transform-origin) transition-[opacity,transform,width,height,scale,translate] duration-(--duration) ease-(--easing) data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-90 data-starting-style:opacity-0">
+          <NavigationMenu.Popup className="data-[ending-style]:easing-[ease] bg-fuusio-darkblue text-fk-white relative h-(--popup-height) origin-(--transform-origin) transition-[opacity,transform,width,height,scale,translate] duration-(--duration) ease-(--easing) data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-90 data-starting-style:opacity-0">
             <NavigationMenu.Arrow className="flex transition-[left] duration-(--duration) ease-(--easing) data-[side=bottom]:top-[-11px] data-[side=left]:right-[-11px] data-[side=left]:rotate-90 data-[side=right]:left-[-11px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-11px] data-[side=top]:rotate-180">
-              <Arrow className="fill-fk-yellow stroke-fk-yellow h-3 w-3 border-none" />
+              <Arrow className="fill-fuusio-gold stroke-fuusio-gold h-3 w-3 border-none" />
             </NavigationMenu.Arrow>
             <NavigationMenu.Viewport className="relative h-full w-full" />
           </NavigationMenu.Popup>
@@ -143,16 +143,16 @@ function Link(props: NavigationMenu.Link.Props) {
 function Arrow(props: React.ComponentProps<'svg'>) {
   return (
     <svg width="12" height="10" viewBox="0 0 12 10" fill="none" {...props}>
-      <path d="M6 0L0 10H12L6 0Z" className="fill-fuusio-night stroke-fuusio-night" />
+      <path d="M6 0L0 10H12L6 0Z" className="fill-fuusio-darkblue stroke-fuusio-darkblue" />
     </svg>
   )
 }
 
 const topLevelClassName =
   'box-border flex items-center justify-center h-12 border-b-4 ' +
-  'px-2 bg-fuusio-night text-fk-white font-bold ' +
+  'px-2 text-fk-white font-bold ' +
   'leading-6 no-underline ' +
-  'hover:text-fk-yellow active:text-fk-yellow data-popup-open:text-fk-yellow ' +
+  'hover:text-fuusio-gold active:text-fuusio-gold data-popup-open:text-fuusio-gold ' +
   'focus-visible:relative'
 
 const contentClassName =
@@ -166,5 +166,5 @@ const contentClassName =
 
 const linkCardClassName =
   'w-full text-left block px-4 py-3 no-underline text-inherit font-bold ' +
-  'hover:text-fk-yellow ' +
-  'data-popup-open:text-fk-yellow'
+  'hover:text-fuusio-gold ' +
+  'data-popup-open:text-fuusio-gold'

@@ -15,10 +15,10 @@ export const Collapsible = ({ block, locale }: CollapsibleBlockProps) => {
   return (
     <details
       open={block.isOpenByDefault ?? false}
-      className="group border-fk-yellow/50 m-3 rounded border-2"
+      className="group border-fuusio-gold/50 m-3 rounded border-2"
     >
       <summary
-        className="border-fk-yellow/50 flex w-full cursor-pointer list-none items-center justify-between rounded p-3 group-open:border-b-2 [&::-webkit-details-marker]:hidden"
+        className="border-fuusio-gold/50 flex w-full cursor-pointer list-none items-center justify-between rounded p-3 group-open:border-b-2 [&::-webkit-details-marker]:hidden"
         aria-controls={contentId}
       >
         <div className="text-left text-lg font-bold">{block.title}</div>

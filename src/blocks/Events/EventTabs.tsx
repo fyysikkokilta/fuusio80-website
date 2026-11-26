@@ -20,7 +20,7 @@ export const EventTabs = ({ label, defaultValue, tabs }: EventTabsProps) => (
         <Tabs.Tab
           key={tab.id}
           value={tab.id}
-          className="border-fk-yellow/50 hover:border-fuusio-pink data-[active]:bg-glow flex shrink-0 cursor-pointer flex-col rounded-xl border px-4 py-2 text-left transition-colors data-[active]:border-transparent"
+          className="border-fuusio-gold/50 hover:border-fuusio-lightblue data-[active]:bg-fuusio-gold data-[active]:text-fuusio-darkblue flex shrink-0 cursor-pointer flex-col rounded-xl border px-4 py-2 text-left transition-colors data-[active]:border-transparent"
         >
           <span className="text-sm">{tab.date}</span>
           <span className="font-bold">{tab.title}</span>

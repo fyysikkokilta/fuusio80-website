@@ -19,8 +19,8 @@ export default async function NotFound() {
           fill
           unoptimized
         />
-        <div className="bg-fuusio-deep relative flex flex-col items-center rounded-xl p-8 text-center shadow-xl">
-          <h2 className="text-fk-yellow mb-4 animate-bounce text-4xl font-extrabold drop-shadow-lg">
+        <div className="bg-fk-black relative flex flex-col items-center rounded-xl p-8 text-center shadow-xl">
+          <h2 className="text-fuusio-gold mb-4 animate-bounce text-4xl font-extrabold drop-shadow-lg">
             {t('notFound.title')}
           </h2>
           <p className="text-fk-white mb-6 max-w-xl text-lg font-medium md:text-2xl">
@@ -29,7 +29,7 @@ export default async function NotFound() {
           <p className="text-fk-gray-light mt-4 text-xl italic">{t('notFound.subtitle')}</p>
           <Link
             href="/"
-            className="bg-fk-yellow text-fk-black hover:bg-fk-yellow-dark mt-8 inline-block rounded-full px-6 py-3 font-bold shadow transition"
+            className="bg-fuusio-gold text-fk-black hover:bg-fk-yellow-dark mt-8 inline-block rounded-full px-6 py-3 font-bold shadow transition"
           >
             {t('notFound.goHome')}
           </Link>

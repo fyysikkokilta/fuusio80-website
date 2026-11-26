@@ -15,7 +15,7 @@ const HIDE_AFTER_SCROLL_PX = 80
 // Ignore scroll movements smaller than this when deciding whether the user scrolls up or down
 const DIRECTION_SLOP_PX = 6
 // From this width on there is room for the logo beside the center column (max-w-7xl)
-const WIDE_QUERY = '(min-width: 1920px)'
+const WIDE_QUERY = '(min-width: 1655px)'
 
 // The floating logo flies between its resting place (in the middle of the free space left of the
 // center column, near the top of the window) and the place of the logo in the header. While it
@@ -24,14 +24,18 @@ const WIDE_QUERY = '(min-width: 1920px)'
 const LOGO_PX = 100
 const REST_TOP_PX = 16
 const HEADER_LOGO_HEIGHT_PX = 48
+// Space above the logo in the header: the top line (1px) and the padding below it (4px)
+const HEADER_LOGO_TOP_PX = 5
 // NOTE: the flight assumes the header's logo fills the full height of the navigation bar: 48px
 // tall (h-12, width follows the image; see NavbarBrand), at the very top, with its left edge
 // HEADER_LOGO_INSET_PX in from the column edge. If the header logo image has empty space around it,
 // the floating logo will not line up with it at the swap. The same applies when the floating logo
 // is a different image than the header logo.
-// The center column (max-w-7xl) and the left padding of the header inside it (xl:px-12)
+// The center column (max-w-7xl) and the left padding of the header menu inside it (xl:px-12)
 const COLUMN_PX = 1280
-const HEADER_LOGO_INSET_PX = 48
+// The header menus stop at the same points as the content below them (the p-6 of the page content)
+const HEADER_SIDE_BUFFER_PX = 24
+const HEADER_LOGO_INSET_PX = HEADER_SIDE_BUFFER_PX + 48
 const FLIGHT_MS = 600
 const FLIGHT_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)'
 const FADE_MS = 400
@@ -46,11 +50,19 @@ const FADE_MS = 400
  */
 type LogoPhase = 'away' | 'rest' | 'toHeader' | 'atHeader' | 'fading'
 
-const HeaderMenus = ({ navigation }: { navigation: MainNavigation }) => (
-  <>
+// px-6 matches the p-6 of the page content, so the lines of the menu start and end where the content
+// does. A docked header gets the same buffer from its own, narrower width, so it passes buffer={false}.
+const HeaderMenus = ({
+  navigation,
+  buffer = true
+}: {
+  navigation: MainNavigation
+  buffer?: boolean
+}) => (
+  <div className={buffer ? 'px-6' : undefined}>
     <DesktopMenu navigation={navigation} />
     <MobileMenu navigation={navigation} />
-  </>
+  </div>
 )
 
 /** A plain bar that stays at the top of the window. Used where there is no page layout (404, errors). */
@@ -58,7 +70,7 @@ export const PlainHeader = () => {
   const navigation = useNavigation()
 
   return (
-    <header className="bg-fuusio-night/85 text-fk-white sticky top-0 z-50 w-full backdrop-blur-md">
+    <header className="bg-fuusio-darkblue/85 text-fk-white sticky top-0 z-50 w-full backdrop-blur-md">
       <div className="mx-auto w-full max-w-7xl">
         <HeaderMenus navigation={navigation} />
       </div>
@@ -87,7 +99,7 @@ export const SiteHeader = () => {
   const [shown, setShown] = useState(false)
   const [phase, setPhase] = useState<LogoPhase>('away')
   // Width of the window without the scrollbar, which is what the page is laid out in
-  const [viewportWidth, setViewportWidth] = useState(1920)
+  const [viewportWidth, setViewportWidth] = useState(1655)
 
   useEffect(() => {
     const slot = slotRef.current
@@ -214,7 +226,7 @@ export const SiteHeader = () => {
   const headerLogoLeft = (viewportWidth - COLUMN_PX) / 2 + HEADER_LOGO_INSET_PX
   const atRest: CSSProperties = { translate: '0px 0px', scale: 1 }
   const atHeader: CSSProperties = {
-    translate: `${headerLogoLeft - restLeft}px ${-REST_TOP_PX}px`,
+    translate: `${headerLogoLeft - restLeft}px ${HEADER_LOGO_TOP_PX - REST_TOP_PX}px`,
     // The floating logo is as tall as the header logo at the header: a box LOGO_PX wide is
     // LOGO_PX * aspect tall (aspect = height / width of its image)
     scale: HEADER_LOGO_HEIGHT_PX / (LOGO_PX * logoAspect)
@@ -231,7 +243,7 @@ export const SiteHeader = () => {
 
   return (
     <>
-      <div ref={slotRef} className="bg-fuusio-night w-full" style={{ minHeight: height }}>
+      <div ref={slotRef} className="w-full" style={{ minHeight: height }}>
         <div
           className={
             docked
@@ -243,19 +255,23 @@ export const SiteHeader = () => {
             ref={headerRef}
             // Tabbing into a hidden header brings it into view
             onFocusCapture={() => revealRef.current?.()}
-            className={`text-fk-white w-full max-w-7xl ${
+            className={`text-fk-white ${
+              // The docked background stops at the same points as the menu lines: 3rem is the
+              // buffer (px-6) on both sides
+              docked ? 'w-[calc(100%-3rem)] max-w-[calc(80rem-3rem)]' : 'w-full max-w-7xl'
+            } ${
               docked
-                ? `bg-fuusio-night/90 pointer-events-auto shadow-lg backdrop-blur-md transition-transform duration-300 ease-out motion-reduce:transition-none ${
+                ? `bg-fuusio-darkblue/90 pointer-events-auto shadow-lg backdrop-blur-md transition-transform duration-300 ease-out motion-reduce:transition-none ${
                     shown ? 'translate-y-0' : '-translate-y-full'
                   }`
                 : ''
             } ${
               // On wide screens the floating logo stands in for the header's logo while it is
               // away from the header
-              docked && phase !== 'atHeader' ? 'min-[1920px]:[&_.brand-logo]:invisible' : ''
+              docked && phase !== 'atHeader' ? 'min-[1655px]:[&_.brand-logo]:invisible' : ''
             }`}
           >
-            <HeaderMenus navigation={navigation} />
+            <HeaderMenus navigation={navigation} buffer={!docked} />
           </header>
         </div>
       </div>
@@ -264,7 +280,7 @@ export const SiteHeader = () => {
           top of the window. Above the docked header (z-50), so the logo is not hidden behind it
           while it flies to and from the header. */}
       <div
-        className="pointer-events-none fixed z-60 hidden min-[1920px]:block"
+        className="pointer-events-none fixed z-60 hidden min-[1655px]:block"
         style={{ left: restLeft, top: REST_TOP_PX, width: LOGO_PX }}
       >
         <button
@@ -290,7 +306,7 @@ export const SiteHeader = () => {
               className="h-auto w-full drop-shadow-lg"
             />
           ) : (
-            <span className="bg-fuusio-night/85 font-display text-glow block rounded-full px-4 py-2 text-center text-2xl backdrop-blur-md">
+            <span className="bg-fuusio-darkblue/85 font-display text-glow block rounded-full px-4 py-2 text-center text-2xl backdrop-blur-md">
               {navigation.title}
             </span>
           )}

@@ -16,9 +16,9 @@ export const Team = ({ block }: TeamProps) => (
       return (
         <li
           key={id}
-          className="border-fk-yellow/50 bg-fuusio-surface/70 my-0! overflow-hidden rounded-2xl border pl-0!"
+          className="border-fuusio-gold/50 bg-fuusio-darkblue/70 my-0! overflow-hidden rounded-2xl border pl-0!"
         >
-          <div className="bg-fuusio-night/60 relative aspect-square w-full">
+          <div className="bg-fuusio-darkblue/60 relative aspect-square w-full">
             {photo?.url ? (
               <Image
                 src={photo.url}

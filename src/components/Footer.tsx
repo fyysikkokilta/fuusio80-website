@@ -15,7 +15,7 @@ export const Footer = async ({ footer, locale }: FooterProps) => {
   const t = await getTranslations()
 
   return (
-    <footer className="bg-fuusio-deep w-full py-12">
+    <footer className="bg-fk-black w-full py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <div className="prose-p:text-fk-white">
@@ -27,7 +27,7 @@ export const Footer = async ({ footer, locale }: FooterProps) => {
               <SocialIcon
                 url={social}
                 target="_blank"
-                fgColor="#fbdb1d"
+                fgColor="#d8b435"
                 bgColor="#000000"
                 key={index}
               />

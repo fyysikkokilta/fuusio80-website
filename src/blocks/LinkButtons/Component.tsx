@@ -1,5 +1,3 @@
-import { ExternalLink } from 'lucide-react'
-
 import type { LinkButtonsBlock as LinkButtonsBlockType } from '@/payload-types'
 
 interface LinkButtonsProps {
@@ -16,10 +14,9 @@ export const LinkButtons = ({ block }: LinkButtonsProps) => (
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-glow hover:text-fk-black flex items-center justify-center gap-2 rounded-full px-6 py-3 text-center font-bold no-underline transition-transform hover:scale-105"
+        className="bg-fuusio-gold text-fuusio-darkblue hover:text-fuusio-darkblue flex items-center justify-center rounded-full px-6 py-3 text-center font-bold no-underline transition-transform hover:scale-105"
       >
         {label}
-        <ExternalLink size={18} aria-hidden="true" className="shrink-0" />
       </a>
     ))}
   </div>

@@ -34,11 +34,11 @@ export default function Error({
           unoptimized
         />
         <div
-          className="bg-fuusio-deep relative flex flex-col items-center rounded-xl p-8 text-center shadow-xl"
+          className="bg-fk-black relative flex flex-col items-center rounded-xl p-8 text-center shadow-xl"
           role="alert"
           aria-live="assertive"
         >
-          <h2 className="text-fk-yellow mb-4 text-4xl font-extrabold drop-shadow-lg">
+          <h2 className="text-fuusio-gold mb-4 text-4xl font-extrabold drop-shadow-lg">
             {t('title')}
           </h2>
           <p className="text-fk-white mb-4 max-w-xl text-lg font-medium">{t('description')}</p>
@@ -46,13 +46,13 @@ export default function Error({
           <div className="flex gap-4">
             <button
               onClick={() => reset()}
-              className="bg-fk-yellow text-fk-black hover:bg-fk-yellow-dark mt-4 inline-block rounded-full px-6 py-3 font-bold shadow transition"
+              className="bg-fuusio-gold text-fk-black hover:bg-fk-yellow-dark mt-4 inline-block rounded-full px-6 py-3 font-bold shadow transition"
             >
               {t('tryAgain')}
             </button>
             <Link
               href="/"
-              className="bg-fk-yellow text-fk-black hover:bg-fk-yellow-dark mt-4 inline-block rounded-full px-6 py-3 font-bold shadow transition"
+              className="bg-fuusio-gold text-fk-black hover:bg-fk-yellow-dark mt-4 inline-block rounded-full px-6 py-3 font-bold shadow transition"
             >
               {t('goHome')}
             </Link>

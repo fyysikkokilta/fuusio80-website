@@ -80,25 +80,6 @@ export const Pages: CollectionConfig = {
               }
             },
             {
-              name: 'backgroundImage',
-              type: 'upload',
-              relationTo: 'media',
-              admin: {
-                description:
-                  'Background of the page, shown on both sides of the center column. It repeats downwards as it is, so it must tile seamlessly top to bottom. Sideways it repeats too, mirrored or not depending on the option below. It is drawn at its own pixel size.'
-              }
-            },
-            {
-              name: 'mirrorBackgroundHorizontally',
-              type: 'checkbox',
-              defaultValue: true,
-              admin: {
-                condition: (data) => !!data?.backgroundImage,
-                description:
-                  'Mirror every second copy of the background sideways, so the edges of neighbouring copies match. Turn off if the image already tiles seamlessly sideways or must not be mirrored.'
-              }
-            },
-            {
               name: 'content',
               type: 'richText',
               required: true,

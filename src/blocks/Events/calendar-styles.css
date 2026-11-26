@@ -1,13 +1,13 @@
 :root {
   /* Fuusio 80 dark theme. The rest of this file comes from fk-web and only reads these variables. */
-  --calendar-primary: var(--color-fk-yellow);
+  --calendar-primary: var(--color-fuusio-gold);
   --calendar-secondary: var(--color-fk-white);
   --calendar-on-primary: var(--color-fk-black); /* Text and lines on top of yellow */
-  --calendar-background: var(--color-fuusio-surface);
-  --calendar-border: rgb(251 219 29 / 0.5);
-  --calendar-grid-line: rgb(251 219 29 / 0.25);
-  --calendar-hover: rgb(251 219 29 / 0.15);
-  --calendar-off-range: var(--color-fuusio-night);
+  --calendar-background: var(--color-fuusio-beige);
+  --calendar-border: rgb(216 180 53 / 0.5);
+  --calendar-grid-line: rgb(216 180 53 / 0.25);
+  --calendar-hover: rgb(216 180 53 / 0.15);
+  --calendar-off-range: var(--color-fuusio-darkblue);
 }
 
 .rbc-calendar {

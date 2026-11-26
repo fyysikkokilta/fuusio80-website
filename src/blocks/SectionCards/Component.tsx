@@ -21,7 +21,7 @@ export const SectionCards = ({ block }: SectionCardsProps) => (
 
       return (
         <Link key={id} href={pageHref(page.path)} className="group block rounded-3xl no-underline">
-          <TiltCard className="border-fk-yellow/60 bg-fuusio-surface group-hover:shadow-fuusio-orange/40 relative flex min-h-64 flex-col justify-end overflow-hidden rounded-3xl border-2 p-6 shadow-xl group-hover:shadow-2xl">
+          <TiltCard className="border-fuusio-gold/60 bg-fuusio-beige group-hover:shadow-fuusio-gold/40 relative flex min-h-64 flex-col justify-end overflow-hidden rounded-3xl border-2 p-6 shadow-xl group-hover:shadow-2xl">
             {background?.url ? (
               <>
                 <Image
@@ -34,7 +34,7 @@ export const SectionCards = ({ block }: SectionCardsProps) => (
                   sizes="(max-width: 640px) 100vw, 50vw"
                   className="object-cover"
                 />
-                <div className="from-fuusio-deep absolute inset-0 bg-linear-to-t to-transparent" />
+                <div className="from-fk-black absolute inset-0 bg-linear-to-t to-transparent" />
               </>
             ) : (
               <div className="hero-glow absolute inset-0 opacity-60" aria-hidden="true" />
@@ -46,7 +46,7 @@ export const SectionCards = ({ block }: SectionCardsProps) => (
               )}
               <ArrowRight
                 aria-hidden="true"
-                className="text-fk-yellow mt-4 transition-transform duration-300 group-hover:translate-x-2"
+                className="text-fuusio-gold mt-4 transition-transform duration-300 group-hover:translate-x-2"
                 size={28}
               />
             </div>

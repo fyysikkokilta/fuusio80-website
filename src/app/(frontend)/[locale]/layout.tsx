@@ -8,6 +8,7 @@ import { bodyFont, displayFont } from '@/app/fonts'
 import { Footer } from '@/components/Footer'
 import { NavigationProvider } from '@/components/Navigation/NavigationProvider'
 import { Partners } from '@/components/Partners'
+import { SiteBackdrop } from '@/components/SiteBackdrop'
 import { SkipLink } from '@/components/SkipLink'
 import { env } from '@/env'
 import { routing } from '@/i18n/routing'
@@ -34,14 +35,17 @@ export default async function RootLayout({ children }: LayoutProps<'/[locale]'>)
   return (
     <html
       lang={curLocale}
-      className={`${bodyFont.variable} ${bodyFont.className} ${displayFont.variable} selection:bg-fk-yellow selection:text-fk-black scrollbar scrollbar-thumb-fk-yellow scrollbar-track-fuusio-deep scroll-pt-16`}
+      className={`${bodyFont.variable} ${bodyFont.className} ${displayFont.variable} selection:bg-fuusio-gold selection:text-fk-black scrollbar scrollbar-thumb-fuusio-gold scrollbar-track-fk-black scroll-pt-16`}
     >
-      <body className="bg-fuusio-night text-fk-white flex min-h-dvh flex-1 shrink-0 flex-col items-center overflow-x-clip">
+      <body className="bg-fuusio-darkblue text-fk-white flex min-h-dvh flex-1 shrink-0 flex-col items-center overflow-x-clip">
         <NextIntlClientProvider>
-          <NextTopLoader color="#fbdb1d" showSpinner={false} showForHashAnchor={false} />
+          <NextTopLoader color="#d8b435" showSpinner={false} showForHashAnchor={false} />
           <SkipLink />
           <NavigationProvider navigation={navigation}>
-            {children}
+            <div className="relative isolate flex w-full flex-1 flex-col">
+              <SiteBackdrop />
+              {children}
+            </div>
             {!!partners?.partners?.length && <Partners partnerData={partners} />}
             <Footer footer={footer} locale={curLocale} />
           </NavigationProvider>
